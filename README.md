@@ -483,5 +483,17 @@ When using commands like `git reset` or `git revert`, you often see `HEAD~1`, `H
 *   `HEAD~1` (Parent of latest)
 *   `HEAD~2` (Grandparent of latest)
 
+
+---
+
+### `git fetch`
+**Description:** Downloads all the changes (commits, branches, tags) from the remote repository (like GitHub) to your local machine, but **does not merge** them into your current work. 
+**When to use:** Use this when you want to see what others have done without affecting your local code yet.
+
+**Example:**
+```bash
+git fetch origin
+```
+
 ---
 *Created as a quick reference for D:/GIT*
