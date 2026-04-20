@@ -346,5 +346,78 @@ If you are on `master` and want to merge changes from `bug/123-post`:
 git merge bug/123-post
 ```
 
+
+---
+
+## SSH Setup for GitHub
+
+To securely connect your local repository to GitHub, you need to set up SSH keys.
+
+### 1. Generate SSH Key
+**Command:** `ssh-keygen`
+**Description:** Generates a new pair of public and private keys.
+
+**Example Output:**
+```text
+$ ssh-keygen
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/c/Users/pprad/.ssh/id_ed25519):
+Created directory '/c/Users/pprad/.ssh'.
+Enter passphrase (empty for no passphrase):
+Your public key has been saved in /c/Users/pprad/.ssh/id_ed25519.pub
+```
+
+### 2. View and Copy Your Public Key
+**Command:** `code ~/.ssh/id_ed25519.pub` (using VS Code) or `cat ~/.ssh/id_ed25519.pub`
+**Description:** You need to copy the content of this file and add it to your GitHub account settings under "SSH and GPG keys".
+
+### 3. Test the Connection
+**Command:** `ssh -T git@github.com`
+**Description:** Verifies if your SSH key is correctly configured and authenticated with GitHub.
+
+**Example Output:**
+```text
+$ ssh -T git@github.com
+The authenticity of host 'github.com (20.207.73.82)' can't be established.
+ED25519 key fingerprint is: SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+Hi pradiptapaul97! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+
+---
+
+## Remote Repositories
+
+### `git remote -v`
+**Description:** Lists the remote connections you have to other repositories. It shows the shorthand name (like `origin`) and the URL associated with it for both fetching and pushing data.
+
+**Example Output:**
+```text
+$ git remote -v
+origin  https://github.com/pradiptapaul97/GIT.git (fetch)
+origin  https://github.com/pradiptapaul97/GIT.git (push)
+```
+
+
+### `git push -u origin master`
+**Description:** Uploads your local branch commits to the remote repository. The `-u` flag sets the "upstream" tracking, so you can just use `git push` next time.
+
+**Example Output:**
+```text
+$ git push -u origin master
+Enumerating objects: 25, done.
+Counting objects: 100% (25/25), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (21/21), done.
+Writing objects: 100% (23/23), 3.27 KiB | 1.09 MiB/s, done.
+Total 23 (delta 10), reused 5 (delta 1), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (10/10), completed with 1 local object.
+To https://github.com/pradiptapaul97/GIT.git
+   25f63d3..ce94632  master -> master
+branch 'master' set up to track 'origin/master'.
+```
+
 ---
 *Created as a quick reference for D:/GIT*
