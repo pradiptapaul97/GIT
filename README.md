@@ -451,5 +451,37 @@ git revert ce94632
 git reset --hard 1930b76
 ```
 
+
+---
+
+### Comparison: When to use `revert` vs `reset`?
+
+| Feature | `git revert` | `git reset` |
+| :--- | :--- | :--- |
+| **Main Action** | Creates a **NEW** commit that undoes changes. | Moves the current branch **BACK** to a previous commit. |
+| **History** | **Preserves history.** You see both the mistake and the fix. | **Rewrites history.** The mistakes disappear from the log. |
+| **Shared Code** | **Safe** to use on branches shared with others (GitHub). | **Dangerous** on shared branches (causes conflicts for others). |
+| **Outcome** | Your file changes are undone, but the commit count increases. | Your file changes are undone, and the commit history is shortened. |
+| **Condition** | Use when the code is already **pushed** to a remote server. | Use for **local** mistakes that you haven't shared yet. |
+
+
+---
+
+## Understanding `HEAD~n` Notation
+
+When using commands like `git reset` or `git revert`, you often see `HEAD~1`, `HEAD~2`, etc. This is a shorthand way to refer to previous commits relative to where you are now.
+
+| Notation | Meaning |
+| :--- | :--- |
+| **`HEAD`** | The current commit you are on. |
+| **`HEAD~1`** | The commit immediately before the current one (1 commit back). |
+| **`HEAD~2`** | Two commits before the current one (2 commits back). |
+| **`HEAD~n`** | **n** commits before the current one. |
+
+**Visual Example:**
+*   `HEAD` (Latest Commit)
+*   `HEAD~1` (Parent of latest)
+*   `HEAD~2` (Grandparent of latest)
+
 ---
 *Created as a quick reference for D:/GIT*
