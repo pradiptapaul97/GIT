@@ -248,4 +248,34 @@ Changes not staged for commit:
 3.  **Working Area was Unaffected:** The `README.md` file, which was already modified in your working area, remains exactly as it was (unstaged).
 
 ---
+
+## Branching
+
+### `git branch`
+**Description:** Lists all the branches in your repository. It shows you which branch you are currently on and what other branches exist locally.
+
+**Example Output:**
+```text
+$ git branch
+* master
+```
+
+---
+
+### `git branch <branch-name>`
+**Description:** Creates a new branch with the specified name. 
+
+**Best Practice Naming Convention:**
+A common way to name branches is to include the type of work, a tracking number (like a user story or bug ID), and a short description:
+`bug/<story-number>-<description>`
+
+**Example:**
+```bash
+git branch bug/123-post
+```
+*   `bug/`: The type of branch (e.g., feature, bug, hotfix).
+*   `123`: The user story or ticket number for tracking.
+*   `post`: A short description of the specific changes.
+
+---
 *Created as a quick reference for D:/GIT*
