@@ -277,5 +277,44 @@ git branch bug/123-post
 *   `123`: The user story or ticket number for tracking.
 *   `post`: A short description of the specific changes.
 
+
+---
+
+### `git checkout`
+**Description:** Used to switch between branches or restore working tree files. It is the primary way to move your `HEAD` pointer to a different branch or commit.
+
+**Common Options:**
+
+| Command | Description |
+| :--- | :--- |
+| **`git checkout <branch>`** | Switch to an existing branch. |
+| **`git checkout -b <branch>`** | **Create** a new branch and **switch** to it immediately. |
+| **`git checkout <commit-hash>`** | Switch to a specific commit. |
+| **`git checkout <file>`** | Discard local changes in a file. |
+
+
+---
+
+### `git switch`
+**Description:** A newer, more specific command for switching branches. It was introduced to separate the "switching branches" functionality of `git checkout` from its other uses.
+
+**Common Options:**
+
+| Command | Description |
+| :--- | :--- |
+| **`git switch <branch>`** | Switch to an existing branch. |
+| **`git switch -c <branch>`** | **Create** a new branch and **switch** to it immediately. |
+
+
+---
+
+### Comparison: `git branch` vs `git checkout` vs `git switch`
+
+| Command | Primary Purpose | Best Used For... |
+| :--- | :--- | :--- |
+| **`git branch`** | **Management** | Listing, creating, or deleting branches. |
+| **`git checkout`** | **Navigation & Restore** | Switching branches, going to specific commits, or discarding file changes. |
+| **`git switch`** | **Branch Navigation** | Switching branches or creating/switching in one step (modern alternative to `checkout`). |
+
 ---
 *Created as a quick reference for D:/GIT*
