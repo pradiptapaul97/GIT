@@ -529,4 +529,24 @@ It is important to understand how these commands work together to update your lo
 | **`git pull`** | **Fetch + Merge** | Downloads the latest code and integrates it immediately. |
 
 ---
+
+### Deleting Branches
+
+**Description:** Once you have merged a branch or decided to discard the work, you should delete it to keep your repository clean. You **cannot** delete a branch that you are currently standing on.
+
+**Common Options for Deleting:**
+
+| Command | Description | Example |
+| :--- | :--- | :--- |
+| **`git branch -d <branch>`** | **Safe Delete (Local):** Deletes the local branch *only* if its changes have already been safely merged into another branch. | `git branch -d feature-x` |
+| **`git branch -D <branch>`** | **Force Delete (Local):** Deletes the local branch forcefully, permanently throwing away any unmerged changes. | `git branch -D messy-experiment` |
+| **`git push <remote> --delete <branch>`**<br>*(or `-d`)* | **Delete Remote Branch:** Removes the branch from the remote server (e.g., GitHub). This does not delete your local copy. | `git push origin -d feature-x` |
+
+**Example:**
+```bash
+$ git branch -d bug/123-post
+Deleted branch bug/123-post (was 38e984f).
+```
+
+---
 *Created as a quick reference for D:/GIT*
