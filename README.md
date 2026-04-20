@@ -340,11 +340,25 @@ git branch bug/123-post
 ### `git merge <branch-name>`
 **Description:** Combines the changes from another branch into your current branch. This is commonly used to bring feature or bugfix changes back into the `master` or `main` branch.
 
-**Example:**
+**Basic Example:**
 If you are on `master` and want to merge changes from `bug/123-post`:
 ```bash
 git merge bug/123-post
 ```
+
+#### Merge Strategies
+
+Git uses different "strategies" to combine branches depending on how their histories have diverged and the flags you use.
+
+| Strategy | Description | Example Command | Test Case / Scenario |
+| :--- | :--- | :--- | :--- |
+| **Fast-forward**<br>(Default if possible) | Moves the current branch pointer forward to the target branch's latest commit. No new "merge commit" is created. | `git merge feature-branch` | **Given:** `master` is at commit A. `feature` branched from A and has commits B & C.<br>**Action:** On `master`, run `git merge feature`.<br>**Result:** `master` simply moves forward to commit C. No extra merge commit. |
+| **No fast-forward**<br>(`--no-ff`) | Forces Git to create a new "merge commit" with two parents, even if a fast-forward was possible. Preserves the branch's historical grouping. | `git merge --no-ff feature-branch` | **Given:** `feature` has commits B & C. You want to see them grouped as a feature in history.<br>**Action:** On `master`, run `git merge --no-ff feature`.<br>**Result:** A new commit `M` is created on `master`. History clearly shows when the feature was merged. |
+| **Squash**<br>(`--squash`) | Takes all changes from the target branch, stages them, and stops. You then make one new commit. The histories are not linked. | `git merge --squash feature-branch`<br>`git commit -m "Squashed changes"` | **Given:** `feature` has 5 messy "work in progress" commits.<br>**Action:** On `master`, run `git merge --squash feature` then commit.<br>**Result:** `master` gets 1 clean new commit containing all changes. `feature` history is ignored. |
+| **3-Way Merge**<br>(Default if divergent) | Used when both branches have unique commits since they diverged. Git creates a new "merge commit" combining both histories. | `git merge feature-branch` | **Given:** `master` has new commit C. `feature` has new commit D (both diverged from B).<br>**Action:** On `master`, run `git merge feature`.<br>**Result:** Git creates commit `M` combining changes from C and D, automatically resolving if no conflicts exist. |
+| **Octopus**<br>(`-s octopus`) | Used when merging **more than two branches** at once. It creates a single merge commit with multiple parents. It is the default strategy when passing multiple branches to merge. | `git merge feature1 feature2 feature3` | **Given:** You have 3 separate, completed feature branches (`f1`, `f2`, `f3`).<br>**Action:** On `master`, run `git merge f1 f2 f3`.<br>**Result:** `master` gets **one** new merge commit that ties in all 3 branches simultaneously, rather than creating 3 separate merge commits. |
+| **Ours**<br>(`-s ours`) | Merges the histories, but **completely ignores all changes** from the target branch. The resulting files are exactly the same as your current branch. | `git merge -s ours obsolete-branch` | **Given:** You have an old branch whose history you want to link, but you don't want any of its actual code.<br>**Action:** Run `git merge -s ours obsolete-branch`.<br>**Result:** `master` gets a new merge commit, but no files are changed. *(Note: Different from `-X ours` conflict resolution)*. |
+| **Subtree**<br>(`-s subtree`) | A specialized strategy used when you want to merge an entirely different project (or branch) into a specific sub-folder of your current project. | `git merge -s subtree foreign-project` | **Given:** You want to include a 3rd-party library's repo inside your `vendor/` folder.<br>**Action:** Run `git merge -s subtree foreign-project`.<br>**Result:** Git figures out the directory structure and merges the foreign project neatly into the subdirectory. |
 
 
 ---
