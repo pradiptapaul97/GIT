@@ -159,11 +159,11 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 The `git reset` command is used to move your repository's history back to a specific point. It has three main options that determine what happens to your changes:
 
-| Option | What happens to the Commit? | What happens to the Staging Area? | What happens to the Working Area? |
-| :--- | :--- | :--- | :--- |
-| `--soft` | **Removed** | **Preserved** (Staged) | **Preserved** (Unchanged) |
-| `--mixed` (Default) | **Removed** | **Removed** (Unstaged) | **Preserved** (Unchanged) |
-| `--hard` | **Removed** | **Removed** | **Removed** (ALL CHANGES LOST) |
+| Option | Commit Area | Staging Area | Working Area | When to use? |
+| :--- | :--- | :--- | :--- | :--- |
+| **`--soft`** | Removed | **Preserved** (Staged) | Preserved | Use when you want to **undo a commit but keep the changes ready** to commit again (e.g., to fix a commit message). |
+| **`--mixed`** (Default) | Removed | Removed (Unstaged) | Preserved | Use when you want to **undo a commit and unstage the changes**, so you can edit them more before committing. |
+| **`--hard`** | Removed | Removed | **Removed** (LOST) | Use only when you want to **completely discard all changes** and return to a previous state. **(Dangerous!)** |
 
 ---
 
