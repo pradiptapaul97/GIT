@@ -118,6 +118,18 @@ Date:   Mon Apr 20 09:09:50 2026 +0530
 
     first commit
 ```
+### `git log` Options
+
+| Option | Description | Example |
+| :--- | :--- | :--- |
+| **`--oneline`** | Shows each commit on a single line (hash and message). | `git log --oneline` |
+| **`--graph`** | Displays a text-based graph of the branch history. | `git log --graph --oneline` |
+| **`-p`** | Shows the "patch" (the actual code changes) for each commit. | `git log -p` |
+| **`--stat`** | Shows stats like which files changed and how many lines were added/deleted. | `git log --stat` |
+| **`-n <number>`** | Limits the log to a specific number of recent commits. | `git log -n 5` |
+| **`--author="<name>"`** | Filters the log to show commits by a specific author. | `git log --author="pradipta"` |
+
+---
 
 ---
 
@@ -315,6 +327,18 @@ git branch bug/123-post
 | **`git branch`** | **Management** | Listing, creating, or deleting branches. |
 | **`git checkout`** | **Navigation & Restore** | Switching branches, going to specific commits, or discarding file changes. |
 | **`git switch`** | **Branch Navigation** | Switching branches or creating/switching in one step (modern alternative to `checkout`). |
+
+
+---
+
+### `git merge <branch-name>`
+**Description:** Combines the changes from another branch into your current branch. This is commonly used to bring feature or bugfix changes back into the `master` or `main` branch.
+
+**Example:**
+If you are on `master` and want to merge changes from `bug/123-post`:
+```bash
+git merge bug/123-post
+```
 
 ---
 *Created as a quick reference for D:/GIT*
