@@ -118,6 +118,7 @@ Date:   Mon Apr 20 09:09:50 2026 +0530
 
     first commit
 ```
+
 ### `git log` Options
 
 | Option | Description | Example |
@@ -128,6 +129,11 @@ Date:   Mon Apr 20 09:09:50 2026 +0530
 | **`--stat`** | Shows stats like which files changed and how many lines were added/deleted. | `git log --stat` |
 | **`-n <number>`** | Limits the log to a specific number of recent commits. | `git log -n 5` |
 | **`--author="<name>"`** | Filters the log to show commits by a specific author. | `git log --author="pradipta"` |
+
+**Example: `git log --oneline`**
+```text
+1930b76 (HEAD -> master) first commit
+```
 
 ---
 
