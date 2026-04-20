@@ -140,4 +140,112 @@ no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
 ---
+
+## Moving Between States (Undoing Changes)
+
+### Staging Area → Working Area (Unstaging)
+**Command:** `git restore --staged <file>`
+**Description:** Moves a file from the staging area back to the working area.
+
+---
+
+### Commit Area → Staging Area (Undoing Commits)
+**Command:** `git reset --soft HEAD~1`
+**Description:** Undoes the last commit and moves the changes back to the staging area.
+
+---
+
+## The `git reset` Command
+
+The `git reset` command is used to move your repository's history back to a specific point. It has three main options that determine what happens to your changes:
+
+| Option | What happens to the Commit? | What happens to the Staging Area? | What happens to the Working Area? |
+| :--- | :--- | :--- | :--- |
+| `--soft` | **Removed** | **Preserved** (Staged) | **Preserved** (Unchanged) |
+| `--mixed` (Default) | **Removed** | **Removed** (Unstaged) | **Preserved** (Unchanged) |
+| `--hard` | **Removed** | **Removed** | **Removed** (ALL CHANGES LOST) |
+
+---
+
+### Detailed Example: `git reset --soft <hash>`
+
+**Command:** `git reset --soft <hash>`
+**Description:** Resets the repository history to a specific commit hash, keeping all changes made after that commit in the **Staging Area**.
+
+**1. View history before reset:**
+```text
+$ git log
+commit 4352d1229d7641f4e007cda90becda1115f329ee (HEAD -> master)
+Author: pradipta <ppradipta65@gmail.com>
+Date:   Mon Apr 20 09:36:09 2026 +0530
+
+    third commit
+
+commit 38e984f11fb4f0384d2f0be4c3f12f1137b59d16
+Author: pradipta <ppradipta65@gmail.com>
+Date:   Mon Apr 20 09:24:27 2026 +0530
+
+    second commit
+
+commit 1930b76cce27163c1817b048e549cd8bddc71c5b
+Author: pradipta <ppradipta65@gmail.com>
+Date:   Mon Apr 20 09:09:50 2026 +0530
+
+    first commit
+```
+
+**2. View status before reset:**
+```text
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+**3. Run the reset command:**
+```bash
+git reset --soft 38e984
+```
+
+**4. View history after reset:**
+```text
+$ git log
+commit 38e984f11fb4f0384d2f0be4c3f12f1137b59d16 (HEAD -> master)
+Author: pradipta <ppradipta65@gmail.com>
+Date:   Mon Apr 20 09:24:27 2026 +0530
+
+    second commit
+
+commit 1930b76cce27163c1817b048e549cd8bddc71c5b
+Author: pradipta <ppradipta65@gmail.com>
+Date:   Mon Apr 20 09:09:50 2026 +0530
+
+    first commit
+```
+
+**5. View status after reset:**
+```text
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   a.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+```
+
+### What happened after the reset?
+
+1.  **History Changed:** In step 4, the `git log` shows that the "third commit" has been removed from the official history. The `HEAD` pointer has moved back to the "second commit".
+2.  **Changes became Staged:** In step 5, `git status` shows `a.txt` under "Changes to be committed". This is because the changes that were in the "third commit" didn't disappear; Git just moved them from the **Commit Area** back into the **Staging Area**.
+3.  **Working Area was Unaffected:** The `README.md` file, which was already modified in your working area, remains exactly as it was (unstaged).
+
+---
 *Created as a quick reference for D:/GIT*
