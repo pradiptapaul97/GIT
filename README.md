@@ -419,5 +419,37 @@ To https://github.com/pradiptapaul97/GIT.git
 branch 'master' set up to track 'origin/master'.
 ```
 
+
+---
+
+## Undoing History: `git revert` vs `git reset`
+
+When you need to undo a commit, you have two main choices:
+
+### `git revert <commit-hash>`
+**Description:** Creates a **new commit** that does the exact opposite of the specified commit. This effectively undoes the changes without deleting the history.
+**When to use:** Use this when you have already pushed your code to a shared repository (like GitHub). It is safe because it doesn't change existing history.
+
+**Example:**
+```bash
+git revert ce94632
+```
+
+---
+
+### `git reset <commit-hash>`
+**Description:** Moves the branch pointer back to a previous commit, essentially **deleting** the commits that came after it.
+**When to use:** Use this only for local changes that haven't been shared yet.
+
+**Reset Options (Summary):**
+*   `--soft`: Keeps changes in the Staging Area.
+*   `--mixed`: Keeps changes in the Working Area.
+*   `--hard`: Deletes all changes.
+
+**Example:**
+```bash
+git reset --hard 1930b76
+```
+
 ---
 *Created as a quick reference for D:/GIT*
