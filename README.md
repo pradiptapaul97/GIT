@@ -495,5 +495,24 @@ When using commands like `git reset` or `git revert`, you often see `HEAD~1`, `H
 git fetch origin
 ```
 
+
+---
+
+## The Connection: `fetch` + `merge` = `pull`
+
+It is important to understand how these commands work together to update your local repository:
+
+1.  **`git fetch`**: Only **downloads** the data. Your local files do not change.
+2.  **`git merge`**: **Applies** those downloaded changes to your current branch.
+
+### The `git pull` Command
+**`git pull`** is a shortcut that performs both `git fetch` and `git merge` in a single step.
+
+| Command | Action | Description |
+| :--- | :--- | :--- |
+| **`git fetch`** | Download | Gets the latest code from GitHub but doesn't change your files. |
+| **`git merge`** | Integrate | Combines the fetched changes into your current work. |
+| **`git pull`** | **Fetch + Merge** | Downloads the latest code and integrates it immediately. |
+
 ---
 *Created as a quick reference for D:/GIT*
