@@ -548,5 +548,124 @@ $ git branch -d bug/123-post
 Deleted branch bug/123-post (was 38e984f).
 ```
 
+## Merge vs Rebase vs Squash Merge
+
+When integrating changes from one branch into another, you have three main options. Here is a comparison of how they affect your commit history:
+
+| Feature | `git merge` | `git rebase` | `git merge --squash` |
+| :--- | :--- | :--- | :--- |
+| **Action** | Combines two branches with a new "merge commit". | Moves the entire feature branch to begin on the tip of the target branch. | Combines all commits from the feature branch into a single, new commit on the target branch. |
+| **History Structure** | Preserves exact history, showing when branches diverged and merged. | Rewrites history to be completely linear. No merge commits. | Rewrites history. The detailed commits of the feature branch are lost. |
+| **Commit Volume** | High (keeps all individual commits + merge commit). | High (keeps all individual commits, but linearly). | Low (only 1 single commit added). |
+| **Best Used For** | Merging completed, significant features or shared branches where historical context is important. | Keeping a clean, linear history for personal or un-shared feature branches before merging. | Merging small features or pulling changes into `main` without cluttering the history with WIP commits. |
+| **Warning** | Can create a messy, "train track" history if overused. | **Dangerous** on shared branches. Never rebase commits that have been pushed publicly. | You lose the detailed, step-by-step history of the work done on the feature branch. |
+
+## Detailed Merge Strategies with Graphs
+
+### 1. Fast-forward Merge (Default if possible)
+**Command**: `git merge feature`
+**Description**: Moves the `HEAD` pointer of the current branch forward to the target branch. No new merge commit is created.
+**Graph**:
+```text
+Before Merge:
+      A---B---C feature
+     /
+D---E main
+
+After Fast-forward:
+D---E---A---B---C main, feature
+```
+
+### 2. No Fast-forward (`--no-ff`)
+**Command**: `git merge --no-ff feature`
+**Description**: Forces Git to create a merge commit, even if a fast-forward is possible. This preserves the historical grouping of the feature branch commits.
+**Graph**:
+```text
+Before Merge:
+      A---B---C feature
+     /
+D---E main
+
+After --no-ff Merge:
+      A---B---C feature
+     /         \
+D---E-----------M main
+```
+
+### 3. Squash Merge (`--squash`)
+**Command**: `git merge --squash feature`
+**Description**: Combines all commits from the feature branch into a single new commit on the target branch. The feature branch's individual history is not linked.
+**Graph**:
+```text
+Before Merge:
+      A---B---C feature
+     /
+D---E main
+
+After Squash Merge:
+D---E---S main (S contains changes from A, B, and C)
+```
+*(The feature branch remains separate, but its changes are condensed into one commit on main)*
+
+### 4. 3-Way Merge (Default when diverged)
+**Command**: `git merge feature`
+**Description**: Git creates a new merge commit combining both histories. This happens automatically when both branches have new commits since they diverged.
+**Graph**:
+```text
+Before Merge:
+      A---B---C feature
+     /
+D---E---F---G main
+
+After 3-Way Merge:
+      A---B---C feature
+     /         \
+D---E---F---G---M main
+```
+
+### 5. Octopus Merge (`-s octopus`)
+**Command**: `git merge branch1 branch2 branch3`
+**Description**: Used to merge more than two branches at once. It creates a single merge commit with multiple parents, keeping the history less cluttered than multiple sequential merges.
+**Graph**:
+```text
+      A---B branch1
+     /
+    / C---D branch2
+   / /
+  / / E---F branch3
+ / / /
+X-------M main
+```
+*(M is a single merge commit combining branch1, branch2, and branch3)*
+
+### 6. Ours Merge (`-s ours`)
+**Command**: `git merge -s ours feature`
+**Description**: Merges the history of the feature branch, but completely ignores any code changes from it. The file tree of the resulting merge commit is identical to the current branch.
+**Graph**:
+```text
+Before Merge:
+      A---B---C feature
+     /
+D---E---F---G main
+
+After Ours Merge:
+      A---B---C feature
+     /         \
+D---E---F---G---M main
+```
+*(History looks like a normal 3-way merge, but `M` contains ONLY the code from `main`, ignoring all changes introduced in `A`, `B`, and `C`)*
+
+### 7. Subtree Merge (`-s subtree`)
+**Command**: `git merge -s subtree external-project`
+**Description**: Merges another project or branch into a specific subdirectory of your current repository, adjusting the paths automatically.
+**Concept Graph**:
+```text
+X---Y---Z external-project (e.g., a library)
+         \
+          \ (merged into 'vendor/library/' folder)
+           \
+A---B---C---M main
+```
+
 ---
 *Created as a quick reference for D:/GIT*
