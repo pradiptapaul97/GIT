@@ -688,59 +688,183 @@ D---E---B' main
 
 ## Interactive Rebase (`git rebase -i`)
 
-Interactive rebase allows you to alter individual commits, squash them together, drop them, or change their order before you share your work. This is a powerful tool for cleaning up your local commit history.
+Interactive rebase allows you to rewrite history by modifying, combining, or deleting commits. It is most commonly used to "clean up" a local branch before merging it into a main branch.
 
-### 1. Interactive Rebase relative to `HEAD`
-**Command**: `git rebase -i HEAD~3`
-**Description**: Opens an editor to let you interactively rebase the last 3 commits from your current `HEAD` pointer.
+### 1. Starting the Rebase
+*   **Last 3 commits**: `git rebase -i HEAD~3`
+*   **Since a specific commit**: `git rebase -i <commit-hash>` (This will include all commits *after* the one specified).
 
-### 2. Interactive Rebase relative to a Specific Commit
-**Command**: `git rebase -i <commit-hash>`
-**Description**: Opens an editor to let you interactively rebase all commits that came *after* the specified commit hash up to your current `HEAD`.
+### 2. The Interactive Menu (Commands)
+When you run the command, an editor opens with a list of commits. You change the word `pick` to one of the following:
 
-### Common Interactive Commands (in the editor)
-*   `pick` (or `p`): Use the commit as is.
-*   `reword` (or `r`): Use the commit, but edit the commit message.
-*   `edit` (or `e`): Stop the rebase process to let you amend the commit or add more changes.
-*   `squash` (or `s`): Combine this commit with the previous one, and combine their messages.
-*   `fixup` (or `f`): Combine this commit with the previous one, but discard this commit's message.
-*   `drop` (or `d`): Remove the commit entirely from history.
+| Command | Action | Workflow / Result |
+| :--- | :--- | :--- |
+| **`pick` (p)** | Keep | The commit is included exactly as it is. |
+| **`reword` (r)** | Rename | Git stops at this commit and lets you change the commit message. |
+| **`edit` (e)** | Modify | Git stops the rebase to let you add/remove files or change content. |
+| **`squash` (s)** | Combine | Merges this commit into the *previous* one and combines the messages. |
+| **`fixup` (f)** | Combine (Quiet) | Merges this commit into the previous one but *discards* this message. |
+| **`drop` (d)** | Delete | Completely removes the commit from history. |
+| **`exec` (x)** | Run Command | Runs a shell command (e.g., `npm test`) after this commit. |
+| **`break` (b)** | Stop | Stops the rebase at this point (similar to `edit` but without a specific commit). |
+| **`label` (l)** | Tag | Labels the current HEAD with a name (used for complex merges). |
+| **`reset` (t)** | Reset | Resets HEAD to a previously defined label. |
+| **`merge` (m)** | Merge | Creates a merge commit using a label. |
 
-### Example & Graph: Squashing Commits
+---
 
-**Scenario**: You have made 3 messy WIP (Work In Progress) commits, and you want to squash the last two into the first one to make a single clean commit.
+### Detailed Workflows & Graphs
 
-**Before Interactive Rebase (`git log --oneline`)**:
-```text
-C (HEAD)  WIP: fix typo
-B         WIP: added half the feature
-A         started new feature
-D         older commit
-```
-
-**Action**: Run `git rebase -i HEAD~3` (or `git rebase -i D`).
-In the editor, change the commands from `pick` to `squash` (or `s`) for commits B and C:
-```text
-pick   A started new feature
-squash B WIP: added half the feature
-squash C WIP: fix typo
-```
-
-**After Interactive Rebase**:
-```text
-S (HEAD)  started new feature (Clean, combined commit)
-D         older commit
-```
-
+#### A. Rewording a Commit Message
+**Scenario**: You want to fix a typo in a commit message from 3 commits ago.
+1.  Run `git rebase -i HEAD~3`.
+2.  Change `pick` to `reword` for that commit.
+3.  Save and exit. Git will open a new editor window for you to type the new message.
 **Graph**:
 ```text
-Before Rebase:
+(Before) A---B---C (HEAD)
+(Action) reword B
+(After)  A---B'---C' (HEAD)  <- B' has the new message
+```
+
+#### B. Squashing/Fixing Up Commits
+**Scenario**: You have several "WIP" commits that should be one single feature commit.
+1.  Run `git rebase -i HEAD~3`.
+2.  Leave the first commit as `pick`.
+3.  Change the following commits to `squash` (to keep messages) or `fixup` (to discard messages).
+**Graph**:
+```text
+(Before) A---B---C (HEAD)
+(Action) pick A, squash B, fixup C
+(After)  S (HEAD)  <- S contains all changes from A, B, and C
+```
+
+#### C. Deleting (Dropping) a Commit
+**Scenario**: You accidentally committed a file with a password or a bug you no longer want.
+1.  Change `pick` to `drop` (or just delete the line).
+**Graph**:
+```text
+(Before) A---B---C (HEAD)
+(Action) drop B
+(After)  A---C' (HEAD)  <- Commit B is gone
+```
+
+---
+
+### Advanced Workflow: Modifying Files in the Middle (`edit`)
+
+This is the most powerful use of rebase. It allows you to step back in time, change the code, and then return to the present.
+
+**Scenario**: You realized you forgot to add a specific file or change a line in a commit that happened 3 steps ago.
+
+**1. Start the rebase**:
+```bash
+git rebase -i HEAD~3
+```
+
+**2. Select `edit`**:
+Change the commit you want to change from `pick` to `edit`.
+```text
+edit A (Oldest)
+pick B
+pick C (HEAD)
+```
+
+**3. Modify the files**:
+Git will stop at commit A. Now you can make your changes:
+```bash
+# Edit your file
+# Stage the changes
+git add updated_file.txt
+
+# Create a new file if needed
+git add new_missing_file.txt
+```
+
+**4. Amend the commit**:
+Instead of creating a new commit, you "squash" these changes into the current stop point:
+```bash
+git commit --amend --no-edit
+```
+
+**5. Continue the rebase**:
+Now that the middle commit is updated, tell Git to finish the rest of the rebase:
+```bash
+git rebase --continue
+```
+
+**Graph of `edit` Workflow**:
+```text
+Initial State:
 D---A---B---C (HEAD)
 
-After Rebase:
-D---S (HEAD) 
+Step 1: Stop at A (edit)
+D---A (STOPPED HERE)
+
+Step 2: Modify files + git add + git commit --amend
+D---A' (Updated commit A)
+
+Step 3: git rebase --continue
+D---A'---B'---C' (HEAD)
 ```
-*(Commits A, B, and C are combined into a single, clean commit S)*
+*(Note: Every commit after the edited one gets a new hash (indicated by ') because their parent has changed)*
+
+---
+
+#### E. Using `exec` to Automate Tests
+**Scenario**: You want to ensure every single commit in your branch passes the tests.
+1.  Run `git rebase -i HEAD~3`.
+2.  Add a line `exec npm test` (or any command) after any commit you want to test.
+**Example Editor Layout**:
+```text
+pick A Feature Part 1
+exec npm test
+pick B Feature Part 2
+exec npm test
+```
+*If the command fails, the rebase will stop, allowing you to fix the bug before continuing.*
+
+#### F. Using `break` to Pause
+**Scenario**: You want to stop the rebase at a specific point to inspect the state of the repository, but you don't necessarily want to "edit" a specific commit.
+1.  Insert the word `break` between any two commits.
+**Example**:
+```text
+pick A
+break
+pick B
+```
+*Git will stop after applying A. You can look around, run commands, and then run `git rebase --continue`.*
+
+#### G. Complex Re-parenting with `label`, `reset`, and `merge`
+**Scenario**: These commands are primarily used by Git itself when you use `--rebase-merges`, but you can use them to manually recreate complex branch structures during a rebase.
+
+*   **`label <name>`**: Marks the current commit with a name.
+*   **`reset <name>`**: Moves the `HEAD` back to that label.
+*   **`merge -C <hash> <label>`**: Merges the specified label into the current `HEAD`.
+
+**Workflow Example**:
+```text
+label branch-point
+pick A
+pick B
+label feature-one
+reset branch-point
+pick C
+merge -C <hash> feature-one
+```
+**Graph of this Workflow**:
+```text
+1. Label "branch-point" at current base.
+2. Apply A and B, Label "feature-one".
+3. Reset back to "branch-point".
+4. Apply C.
+5. Merge "feature-one" into C.
+
+Resulting Graph:
+      A---B (feature-one)
+     /     \
+base---C----M (HEAD)
+```
 
 ---
 *Created as a quick reference for D:/GIT*
