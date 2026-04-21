@@ -866,5 +866,52 @@ Resulting Graph:
 base---C----M (HEAD)
 ```
 
+## Git Stash
+
+`git stash` temporarily shelves (or stashes) changes you've made to your working copy so you can work on something else, and then come back and re-apply them later.
+
+### 1. `git stash` (or `git stash save`)
+**Description**: Takes your uncommitted changes (both staged and unstaged), and saves them on a stack for later use, leaving you with a clean working directory.
+**Example**:
+```bash
+git stash
+# or with a message
+git stash save "work on navigation bar"
+```
+
+### 2. `git stash list`
+**Description**: Lists the stashed changes you have saved. Each stash is identified by an index like `stash@{0}`.
+**Example Output**:
+```text
+stash@{0}: On master: work on navigation bar
+stash@{1}: On master: WIP on login page
+```
+
+### 3. `git stash apply`
+**Description**: Takes the changes from the stash and applies them to your current working directory. By default, it applies the most recent stash (`stash@{0}`).
+**Example**:
+```bash
+# Apply the most recent stash
+git stash apply
+
+# Apply a specific stash
+git stash apply stash@{1}
+```
+*(Note: `apply` keeps the changes in your stash list. Use `pop` if you want to apply and remove simultaneously.)*
+
+### 4. `git stash drop`
+**Description**: Removes a specific stash from the list.
+**Example**:
+```bash
+# Drop the most recent stash
+git stash drop
+
+# Drop a specific stash
+git stash drop stash@{0}
+```
+
+### 5. `git stash clear`
+**Description**: Removes all your stashed changes at once.
+
 ---
 *Created as a quick reference for D:/GIT*
