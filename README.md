@@ -667,5 +667,22 @@ X---Y---Z external-project (e.g., a library)
 A---B---C---M main
 ```
 
+### 8. Cherry-Pick (`git cherry-pick`)
+**Command**: `git cherry-pick <commit-hash>`
+**Description**: Applies the changes introduced by an existing, specific commit from one branch onto your current branch. It essentially copies a commit and creates a new commit with the same changes in your current location. This is highly useful for grabbing a bug fix from another branch without merging the entire branch.
+**Graph**:
+```text
+Before Cherry-Pick (You are on main):
+      A---B---C feature (Commit B is a bug fix you need)
+     /
+D---E main
+
+After `git cherry-pick B`:
+      A---B---C feature
+     /
+D---E---B' main
+```
+*(B' is a new commit containing the exact same changes as B, but applied to the tip of `main`)*
+
 ---
 *Created as a quick reference for D:/GIT*
