@@ -913,5 +913,60 @@ git stash drop stash@{0}
 ### 5. `git stash clear`
 **Description**: Removes all your stashed changes at once.
 
+## Git Forking Workflow
+
+A **Fork** is a personal copy of someone else's project. Forking allows you to freely make changes without affecting the original (upstream) repository. It is the standard way to contribute to open-source projects.
+
+### 1. What is a Fork?
+*   **The Concept**: Unlike a branch (which exists inside a repository), a fork is a completely new repository on your account (e.g., on GitHub) that is linked to the original.
+*   **Purpose**: To propose changes to a project you don't have "write" access to, or to use someone else's project as a starting point for your own.
+
+### 2. The Forking Process (Step-by-Step)
+
+#### Step 1: Fork the Repository
+Click the **"Fork"** button on the top-right of the original GitHub repository. This creates a copy under your account.
+
+#### Step 2: Clone Your Fork
+Clone your personal copy to your local machine:
+```bash
+git clone https://github.com/YOUR_USERNAME/project.git
+```
+
+#### Step 3: Configure Upstream
+To keep your fork updated with the original project, you should link to it as an **"upstream"** remote:
+```bash
+# Add the original repository as 'upstream'
+git remote add upstream https://github.com/ORIGINAL_OWNER/project.git
+
+# Verify your remotes
+git remote -v
+# origin   (your fork)
+# upstream (the original project)
+```
+
+#### Step 4: Create a Feature Branch
+Always work on a new branch, never on `main`:
+```bash
+git checkout -b feature/my-new-fix
+```
+
+#### Step 5: Push Changes to Your Fork
+Once your work is committed, push it to **your** remote repository:
+```bash
+git push origin feature/my-new-fix
+```
+
+#### Step 6: Create a Pull Request (PR)
+Go to the original repository on GitHub. You will see a notification to create a **Pull Request**. This asks the original owners to "pull" your changes into their project.
+
+---
+
+### Keeping Your Fork Updated
+If the original project moves forward, you need to sync your fork:
+1.  `git fetch upstream` (Download latest changes from original)
+2.  `git checkout main`
+3.  `git merge upstream/main` (Bring original changes into your local main)
+4.  `git push origin main` (Update your fork on GitHub)
+
 ---
 *Created as a quick reference for D:/GIT*
