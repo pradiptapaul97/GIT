@@ -968,5 +968,59 @@ If the original project moves forward, you need to sync your fork:
 3.  `git merge upstream/main` (Bring original changes into your local main)
 4.  `git push origin main` (Update your fork on GitHub)
 
+## Git Quiz: Advanced Commands & Troubleshooting
+
+Test your knowledge with these advanced commands and common troubleshooting scenarios.
+
+### 1. Branch Inspection
+*   **`git branch --contains <commit>`**: Lists all branches that include a specific commit hash in their history.
+*   **`git branch -vv`**: Shows a list of local branches, their latest commit message, and which remote "upstream" branch they are tracking (plus if they are ahead/behind).
+*   **`git branch -r`**: Lists all remote-tracking branches.
+
+### 2. File & Index Management
+*   **`git rm --cached <file>`**: Removes a file from the staging area/index but **keeps it in your local directory**. Useful for stopping Git from tracking a file you accidentally added.
+*   **`git rm -r <dir>`**: Recursively removes a directory from tracking.
+*   **`git ls-files`**: Lists all files currently tracked by the Git repository.
+
+### 3. Advanced Merging
+*   **`git merge --ff-only`**: Only completes the merge if a **Fast-Forward** is possible. If the branches have diverged, the merge will fail instead of creating a merge commit.
+*   **`git merge-base <branch1> <branch2>`**: Finds the best common ancestor (the "merge base") between two branches.
+*   **`git merge --abort`**: Stops the merge process and tries to reconstruct the pre-merge state (useful when you have too many conflicts).
+*   **`git merge --no-commit`**: Performs the merge but stops before creating the merge commit, allowing you to inspect and modify the changes.
+
+### 4. Recovery & History
+*   **`git reflog`**: The ultimate safety net. It records every time `HEAD` changes position (switching branches, committing, rebasing). 
+*   **"If you accidentally delete a branch, which command could help you recover it?"**
+    *   **Answer**: `git reflog`. You find the hash of the last commit from that branch and run `git checkout -b <branch-name> <hash>`.
+*   **`git commit --amend -m "New Message"`**: Changes the message of the very last commit.
+*   **`git revert <commit-hash>`**: Creates a **new commit** that performs the exact opposite of the targeted commit. This effectively undoes changes while keeping the history intact and clear.
+
+### 5. Cleaning & Resetting
+*   **`git clean -f`**: Forcefully removes untracked files from your working directory.
+*   **`git clean -fd`**: Removes untracked files and directories.
+*   **`git reset`**: Resets the staging area to match the last commit (unstages files).
+*   **`git reset --hard HEAD`**: **Dangerous!** Discards all local changes in the working directory and staging area, resetting everything to the last commit.
+
+### 6. Investigation & Debugging
+*   **`git blame <file>`**: Shows who changed which line of a file and when (line-by-line history).
+*   **`git bisect`**: Uses binary search to find which commit introduced a bug. You mark a "good" and "bad" commit, and Git checks out commits in between for you to test.
+
+### 7. Large Files & Tagging
+*   **`git tag`**: Used to mark specific points in history as important (usually releases like `v1.0`).
+*   **`git lfs` (Large File Storage)**: An extension for Git that handles large files (like videos or high-res images) by replacing them with text pointers inside Git and storing the actual files on a remote server.
+
+---
+
+### Command Comparison Graph (Undo/Clean)
+
+```text
+Working Dir  <--[git checkout -- <file>]--  Staging Area  <--[git reset]--  Commit Area
+(Unstaged)                                  (Staged)                        (History)
+
+[git clean -f] -> Deletes untracked files in Working Dir.
+[git reset --hard] -> Wipes both Working Dir and Staging Area to match the last commit.
+[git revert] -> Adds a NEW commit that undoes a previous commit (Safe for shared history).
+```
+
 ---
 *Created as a quick reference for D:/GIT*
