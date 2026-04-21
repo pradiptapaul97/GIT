@@ -685,4 +685,62 @@ D---E---B' main
 *(B' is a new commit containing the exact same changes as B, but applied to the tip of `main`)*
 
 ---
+
+## Interactive Rebase (`git rebase -i`)
+
+Interactive rebase allows you to alter individual commits, squash them together, drop them, or change their order before you share your work. This is a powerful tool for cleaning up your local commit history.
+
+### 1. Interactive Rebase relative to `HEAD`
+**Command**: `git rebase -i HEAD~3`
+**Description**: Opens an editor to let you interactively rebase the last 3 commits from your current `HEAD` pointer.
+
+### 2. Interactive Rebase relative to a Specific Commit
+**Command**: `git rebase -i <commit-hash>`
+**Description**: Opens an editor to let you interactively rebase all commits that came *after* the specified commit hash up to your current `HEAD`.
+
+### Common Interactive Commands (in the editor)
+*   `pick` (or `p`): Use the commit as is.
+*   `reword` (or `r`): Use the commit, but edit the commit message.
+*   `edit` (or `e`): Stop the rebase process to let you amend the commit or add more changes.
+*   `squash` (or `s`): Combine this commit with the previous one, and combine their messages.
+*   `fixup` (or `f`): Combine this commit with the previous one, but discard this commit's message.
+*   `drop` (or `d`): Remove the commit entirely from history.
+
+### Example & Graph: Squashing Commits
+
+**Scenario**: You have made 3 messy WIP (Work In Progress) commits, and you want to squash the last two into the first one to make a single clean commit.
+
+**Before Interactive Rebase (`git log --oneline`)**:
+```text
+C (HEAD)  WIP: fix typo
+B         WIP: added half the feature
+A         started new feature
+D         older commit
+```
+
+**Action**: Run `git rebase -i HEAD~3` (or `git rebase -i D`).
+In the editor, change the commands from `pick` to `squash` (or `s`) for commits B and C:
+```text
+pick   A started new feature
+squash B WIP: added half the feature
+squash C WIP: fix typo
+```
+
+**After Interactive Rebase**:
+```text
+S (HEAD)  started new feature (Clean, combined commit)
+D         older commit
+```
+
+**Graph**:
+```text
+Before Rebase:
+D---A---B---C (HEAD)
+
+After Rebase:
+D---S (HEAD) 
+```
+*(Commits A, B, and C are combined into a single, clean commit S)*
+
+---
 *Created as a quick reference for D:/GIT*
